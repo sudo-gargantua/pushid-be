@@ -50,6 +50,19 @@ class AuthController extends Controller
 
         $user = Auth::user();
         
+        // Cek apakah user di-banned
+        if ($user->status === 'banned') {
+            // Logout user yang banned
+            Auth::logout();
+            
+            return response()->json([
+                'message' => 'Akun Anda ditangguhkan',
+                'reason' => $user->admin_note ?? 'Pelanggaran aturan komunitas',
+                'ban_until' => $user->ban_until,
+                'is_banned' => true
+            ], 403);
+        }
+        
         // Buat token menggunakan Sanctum
         $token = $user->createToken('auth-token')->plainTextToken;
 

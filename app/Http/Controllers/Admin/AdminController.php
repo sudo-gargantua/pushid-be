@@ -140,6 +140,7 @@ class AdminController extends Controller
             $reports = Report::with(['reporter', 'lobby.user'])->latest()->get()->map(function($report) {
                 return [
                     'id' => $report->id,
+                    'lobby_id' => $report->lobby_id, // ID lobby untuk delete
                     'reporter' => $report->reporter->name ?? 'User',
                     'reportedUser' => $report->lobby->user->name ?? 'Unknown',
                     'lobbyTitle' => $report->lobby->title ?? 'Deleted Lobby',
