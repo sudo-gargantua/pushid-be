@@ -98,4 +98,43 @@ class AuthController extends Controller
             'token' => $token
         ], 200);
     }
+
+    // ================= REGISTER ADMIN =================
+    public function adminRegister(Request $request)
+    {
+        // Kode admin rahasia (harus sama dengan frontend)
+        $validAdminCode = '177013';
+
+        $request->validate([
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:users,email',
+            'password'   => 'required|min:8',
+            'admin_code' => 'required|string',
+        ]);
+
+        // Validasi kode admin
+        if ($request->admin_code !== $validAdminCode) {
+            return response()->json([
+                'message' => 'Kode admin tidak valid'
+            ], 403);
+        }
+
+        // Buat user dengan role admin
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role'     => 'admin',  // Set role sebagai admin
+            'status'   => 'active',
+        ]);
+
+        // Buat token
+        $token = $user->createToken('admin_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Registrasi Admin Berhasil',
+            'user'    => $user,
+            'token'   => $token,
+        ], 201);
+    }
 }

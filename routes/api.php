@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/admin/login', [AuthController::class, 'adminLogin']);
+Route::post('/admin/register', [AuthController::class, 'adminRegister']);
 Route::get('/lobbies', [LobbyController::class, 'index']);
 Route::get('/lobbies/{slug}', [LobbyController::class, 'show']);
 
